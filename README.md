@@ -55,6 +55,9 @@ client.once('updateOption', callback)
 client.off('updateOption', callback)
 ```
 
+### More examples
+https://github.com/fonbah/tdlnode/examples/
+
 ### Options
 ```js
 const conf = {
