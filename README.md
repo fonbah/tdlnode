@@ -56,7 +56,7 @@ client.off('updateOption', callback)
 ```
 
 ### More examples
-https://github.com/fonbah/tdlnode/examples/
+https://github.com/fonbah/tdlnode/tree/master/examples
 
 ### Options
 ```js
