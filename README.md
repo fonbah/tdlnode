@@ -7,7 +7,7 @@ Telegram nodejs client https://github.com/tdlib/td
 
 ### Getting started
 - Build TDLib binary https://github.com/tdlib/td
-- `npm instal tdlnode`
+- `npm install tdlnode`
 
 ```js
 const path = require('path')
