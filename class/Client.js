@@ -6,7 +6,7 @@ const ClientApi = require('./ClientApi')
 const { optsMerge } = require('../helper/index')
 const { clientDefaultOptions, libDefaultOtions, tdlDefaultOptions } = require('../conf/index')
 
-class Client {
+module.exports = class Client {
     constructor(credentials, options = {}) {
 
         const libOptions = optsMerge(libDefaultOtions, options)
@@ -33,7 +33,15 @@ class Client {
         this.stop = () => {
             __ClientApi.stop()
         }
+
+        this.on = (event, callBack) => {
+            __ClientApi.ClientEvent.on(event, callBack)
+        }
+        this.once = (event, callBack) => {
+            __ClientApi.ClientEvent.once(event, callBack)
+        }
+        this.off = (event, callBack) => {
+            __ClientApi.ClientEvent.off(event, callBack)
+        }
     }
 }
-
-module.exports = Client

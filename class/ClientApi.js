@@ -1,4 +1,5 @@
 'use strict'
+const ClientEvent = require('./ClientEvent')
 const err = require('./err')
 
 const interval = 1000
@@ -7,7 +8,9 @@ module.exports = class ClientApi {
     constructor(Auth, api) {
         this.Auth = Auth
         this.api = api
+        this.ClientEvent = new ClientEvent
         this.t = new Set
+
         let current = 0
         const extras = new Map
 
@@ -30,7 +33,7 @@ module.exports = class ClientApi {
             return Promise
         }
         this.extraSize = () => {
-            if (current < 100) { return extras.size + 1 }
+            if (current < 1000) { return extras.size + 1 }
             return extras.size
         }
 
@@ -63,7 +66,7 @@ module.exports = class ClientApi {
     async __run() {
         try {
             const update = this.api.receive()
-            
+
             if (!update) {
                 console.log('unexpected update ', update)
                 this.stop()
@@ -96,6 +99,7 @@ module.exports = class ClientApi {
                         this.__delExtra(update['@extra'])
                     }
                     const ms = this.extraSize() === 0 ? interval * 10 : this.extraSize() > 10 ? interval / 2 : interval
+                    this.ClientEvent.play(update)
                     this.__addReq(ms)
                     break
             }
