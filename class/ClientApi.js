@@ -9,7 +9,6 @@ module.exports = class ClientApi {
         this.Auth = Auth
         this.api = api
         this.ClientEvent = new ClientEvent
-        this.t = new Set
 
         let current = 0
         const extras = new Map
@@ -32,12 +31,12 @@ module.exports = class ClientApi {
             }
             return Promise
         }
+
         this.extraSize = () => {
-            if (current < 1000) { return extras.size + 1 }
-            return extras.size
+            return current
         }
 
-        this.__run = this.__run.bind(this)
+        this.__req = this.__req.bind(this)
     }
 
     init() {
@@ -63,79 +62,57 @@ module.exports = class ClientApi {
         return expect
     }
 
-    async __run() {
-        try {
-            const update = this.api.receive()
+    async __req() {
+        const update = this.api.receive()
 
-            if (!update) {
-                console.log('unexpected update ', update)
-                this.stop()
-                return
-            }
-
-            switch (update['@type']) {
-                case 'updateAuthorizationState': {
-                    const authObj = await this.Auth.buildQuery(update).catch(console.log)
-                    this.api.send(authObj)
-                    this.__addReq(interval / 2)
-                    break
-                }
-                case 'error': {
-                    if (update.hasOwnProperty('@extra')) {
-                        this.getExtra(update['@extra']).reject(update)
-                        this.delExtra(update['@extra'])
-                        err(update)
-                    }
-                    this.__addReq(interval * 10)
-                    break
-                }
-                default:
-                    if (update.hasOwnProperty('@extra')) {
-                        try {
-                            this.__getExtra(update['@extra']).resolve(update)
-                        } catch (e) {
-                            console.log(e)
-                        }
-                        this.__delExtra(update['@extra'])
-                    }
-                    const ms = this.extraSize() === 0 ? interval * 10 : this.extraSize() > 10 ? interval / 2 : interval
-                    this.ClientEvent.play(update)
-                    this.__addReq(ms)
-                    break
-            }
-        } catch (e) {
-            console.log(e)
+        if (!update) {
+            console.log('unexpected update ', update)
             this.stop()
+            return
+        }
+
+        switch (update['@type']) {
+            case 'updateAuthorizationState': {
+                const authObj = await this.Auth.buildQuery(update).catch(console.log)
+                this.api.send(authObj)
+                this.__run(interval / 5)
+                break
+            }
+            case 'error': {
+                if (update.hasOwnProperty('@extra')) {
+                    this.getExtra(update['@extra']).reject(update)
+                    this.delExtra(update['@extra'])
+                    err(update)
+                }
+                this.__run(interval * 10)
+                break
+            }
+            default:
+                if (update.hasOwnProperty('@extra')) {
+                    try {
+                        this.__getExtra(update['@extra']).resolve(update)
+                    } catch (e) {
+                        console.log(e)
+                    }
+                    this.__delExtra(update['@extra'])
+                }
+                this.ClientEvent.play(update)
+                const ms = this.extraSize() > 500 ? interval / 2 : interval
+                this.__run(ms)
+                break
         }
     }
 
     stop() {
         try {
-            this.t.forEach(k => { clearTimeout(k) })
-            this.t.clear()
             this.api.destroy()
-            console.log('Client succesfully stoped.')
         } catch (e) {
             console.log(e)
         }
-        return null
+        process.exit()
     }
 
-    __addReq(ms = 1000) {
-        this.t.add(setTimeout(this.__run, ms))
-        if (this.t.size > 100) {
-            const itemsDel = [...this.t].slice(0, this.t.size / 2)
-            itemsDel.forEach(item => {
-                this.t.delete(item)
-                clearTimeout(item)
-            })
-        }
+    __run(ms = 1000) {
+        setTimeout(this.__req, ms)
     }
 }
-
-
-
-
-
-
-

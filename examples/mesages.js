@@ -47,7 +47,7 @@ const up = async () => {
                 'text': 'Nodegram test message!',
             },
         },
-        'reply_to_message_id': '18874368',
+        'reply_to_message_id': '', //msg id
     })
 
     const viewMessages = await client.fetch({
@@ -70,6 +70,13 @@ const up = async () => {
         'viewMessages', viewMessages,
         'deleteMessages', deleteMessages
     )
+
+    //Subscribe to events
+    const clb = msg => { console.log('event', msg) }
+
+    client.on('messages', clb)
+
+    client.on('message', clb)
 
     client.stop()
 }
