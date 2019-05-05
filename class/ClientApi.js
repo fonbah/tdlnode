@@ -97,7 +97,7 @@ module.exports = class ClientApi {
                     this.__delExtra(update['@extra'])
                 }
                 this.ClientEvent.play(update)
-                const ms = this.extraSize() > 500 ? interval / 2 : interval
+                const ms = this.extraSize() > 500 ? interval : interval / 2
                 this.__run(ms)
                 break
         }
