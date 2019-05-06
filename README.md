@@ -45,11 +45,11 @@ up()
 ```
 
 ### Events
-- You can subscribe to any of TDLib API return object type https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html
+- Subscribe to any of TDLib API return object type https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html
 ```js
 const callback = msg => {console.log('event', msg)}
 
-client.on('type', callback)
+client.on('returnObjectType', callback)
 
 client.once('returnObjectType', callback)
 
