@@ -2,13 +2,13 @@
 Telegram nodejs client https://github.com/tdlib/td
 
 ### Requirements
-1. Node.js 10 preferred (minimum >= 9.0.0)
+1. Node.js >= 10 preferred (minimum >= 9.0.0)
 2. TDLib binary https://github.com/tdlib/td
 
 ### Getting started
 - Build TDLib binary https://github.com/tdlib/td
-- `npm install tdlnode`
-
+- `npm i tdlnode`
+- Execute any of TDLib API methods https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html
 ```js
 const path = require('path')
 const { Client } = require('tdlnode')
@@ -45,14 +45,15 @@ up()
 ```
 
 ### Events
+- You can subscribe to any of TDLib API return object type https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html
 ```js
 const callback = msg => {console.log('event', msg)}
 
-client.on('updateOption', callback)
+client.on('type', callback)
 
-client.once('updateOption', callback)
+client.once('returnObjectType', callback)
 
-client.off('updateOption', callback)
+client.off('returnObjectType', callback)
 ```
 
 ### More examples
