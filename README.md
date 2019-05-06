@@ -84,6 +84,7 @@ const conf = {
 ### Getting started with telegram TDLib
 - api_id and api_hash https://my.telegram.org/
 - documentation https://core.telegram.org/tdlib/getting-started
+- list of all available TDLib API methods https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html
 
 ### BUILDING INSTRUCTIONS  :
 
