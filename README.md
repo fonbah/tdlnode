@@ -15,7 +15,7 @@ const { Client } = require('tdlnode')
 
 const api_id = 'your api_id'
 const api_hash = 'your api_hash'
-const phone_number = '+12345679021' // or token
+const phone_number = '+12345679021' // or const token = 'your token'
 
 const configuration = {
     path_to_binary_file: path.resolve(__dirname, '../lib/libtdjson'),
@@ -45,15 +45,17 @@ up()
 ```
 
 ### Events
-- Subscribe to any of TDLib API return object type https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html
+Subscribe to:
+- updates https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_update.html
+- any of TDLib API return object type https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html
 ```js
 const callback = msg => {console.log('event', msg)}
 
-client.on('returnObjectType', callback)
+client.on('updateOption', callback)
 
-client.once('returnObjectType', callback)
+client.once('updateOption', callback)
 
-client.off('returnObjectType', callback)
+client.off('updateOption', callback)
 ```
 
 ### More examples
@@ -82,7 +84,6 @@ const conf = {
 ### Getting started with telegram TDLib
 - api_id and api_hash https://my.telegram.org/
 - documentation https://core.telegram.org/tdlib/getting-started
-- list of all available TDLib API methods https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html
 
 ### BUILDING INSTRUCTIONS  :
 

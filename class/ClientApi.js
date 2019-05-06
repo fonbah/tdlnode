@@ -2,6 +2,8 @@
 const ClientEvent = require('./ClientEvent')
 const err = require('./err')
 
+const session = [Date.now(), process.pid].join('-')
+
 const interval = 1000
 
 module.exports = class ClientApi {
@@ -19,7 +21,7 @@ module.exports = class ClientApi {
             }
         }
         this.__defExtra = () => {
-            const uid = current++
+            const uid = [session, current++].join('-')
             const expect = new Promise((resolve, reject) => {
                 extras.set(uid, { resolve, reject })
             })
@@ -66,8 +68,8 @@ module.exports = class ClientApi {
         const update = this.api.receive()
 
         if (!update) {
-            console.log('unexpected update ', update)
-            this.stop()
+            console.log(`unexpected update ${update},  sleep for ${(interval * 10)}seconds`)
+            this.__run(interval * 10)
             return
         }
 
@@ -106,6 +108,7 @@ module.exports = class ClientApi {
     stop() {
         try {
             this.api.destroy()
+            console.log('Client successfully stopped!')
         } catch (e) {
             console.log(e)
         }
