@@ -87,16 +87,6 @@ const conf = {
 - list of all available TDLib API methods https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html
 
 ### BUILDING INSTRUCTIONS  :
-
-to build and run TDLib binary https://github.com/tdlib/td on debian9, (Ubuntu)
-
-1. instal dependacies
-- RUN apt-get -y update
-- RUN apt-get install -y g++ ccache openssl cmake gperf make git libssl-dev libreadline-dev zlib1g zlib1g-dev
-- RUN mkdir build
-
-2. WORKDIR build
-- RUN cmake -DCMAKE_BUILD_TYPE=Release ..
-- RUN cmake --build .
+build TDLib binary https://tdlib.github.io/td/build.html?language=JavaScript
 
 NOTE: building requires min 6gb RAM
