@@ -4,7 +4,7 @@ const err = require('./err')
 
 const session = [Date.now(), process.pid].join('-')
 
-const interval = 1000
+const interval = 5, sleepInterval = 2000
 
 module.exports = class ClientApi {
     constructor(Auth, api) {
@@ -21,7 +21,7 @@ module.exports = class ClientApi {
             }
         }
         this.__defExtra = () => {
-            const uid = [session, current++].join('-')
+            const uid = [session, ++current].join('-')
             const expect = new Promise((resolve, reject) => {
                 extras.set(uid, { resolve, reject })
             })
@@ -32,10 +32,6 @@ module.exports = class ClientApi {
                 return extras.get(uid)
             }
             return Promise
-        }
-
-        this.extraSize = () => {
-            return current
         }
 
         this.__req = this.__req.bind(this)
@@ -68,8 +64,8 @@ module.exports = class ClientApi {
         const update = this.api.receive()
 
         if (!update) {
-            console.log(`unexpected update ${update},  sleep for ${(interval * 10)}seconds`)
-            this.__run(interval * 10)
+            //console.log(`No updates ${update},  sleep for ${sleepInterval}ms`)
+            this.__run(sleepInterval)
             return
         }
 
@@ -77,7 +73,7 @@ module.exports = class ClientApi {
             case 'updateAuthorizationState': {
                 const authObj = await this.Auth.buildQuery(update).catch(console.log)
                 this.api.send(authObj)
-                this.__run(interval / 5)
+                this.__run()
                 break
             }
             case 'error': {
@@ -86,7 +82,8 @@ module.exports = class ClientApi {
                     this.delExtra(update['@extra'])
                     err(update)
                 }
-                this.__run(interval * 10)
+                console.log(`Updates ERROR ${update},  sleep for ${sleepInterval}ms`)
+                this.__run(sleepInterval)
                 break
             }
             default:
@@ -99,8 +96,7 @@ module.exports = class ClientApi {
                     this.__delExtra(update['@extra'])
                 }
                 this.ClientEvent.play(update)
-                const ms = this.extraSize() > 500 ? interval : interval / 2
-                this.__run(ms)
+                this.__run()
                 break
         }
     }
@@ -115,7 +111,7 @@ module.exports = class ClientApi {
         process.exit()
     }
 
-    __run(ms = 1000) {
+    __run(ms = interval) {
         setTimeout(this.__req, ms)
     }
 }
