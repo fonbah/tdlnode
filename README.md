@@ -6,7 +6,7 @@ Telegram nodejs client https://github.com/tdlib/td
 2. TDLib binary https://github.com/tdlib/td
 
 ### Getting started
-- Build TDLib binary https://github.com/tdlib/td
+- Build TDLib binary https://tdlib.github.io/td/build.html?language=JavaScript
 - `npm i tdlnode`
 - Execute any of TDLib API methods https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html
 ```js
