@@ -86,11 +86,7 @@ module.exports = class ClientApi {
             }
             default:
                 if (update.hasOwnProperty('@extra')) {
-                    try {
-                        this.__getExtra(update['@extra']).resolve(update)
-                    } catch (e) {
-                        console.log(e)
-                    }
+                    this.__getExtra(update['@extra']).resolve(update)
                     this.__delExtra(update['@extra'])
                 }
                 this.ClientEvent.play(update)
