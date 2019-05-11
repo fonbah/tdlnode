@@ -1,17 +1,17 @@
 'use strict'
 const ClientEvent = require('./ClientEvent')
-const err = require('./err')
-
-const session = [Date.now(), process.pid].join('-')
 
 const interval = 5, sleepInterval = 2000
 
 module.exports = class ClientApi {
     constructor(Auth, api) {
+
         this.Auth = Auth
         this.api = api
+
         this.ClientEvent = new ClientEvent
 
+        const session = [Date.now(), process.pid].join('-')
         let current = 0
         const extras = new Map
 
@@ -39,8 +39,7 @@ module.exports = class ClientApi {
 
     init() {
         if (this.Auth.__started()) {
-            console.log('Client has been inited already')
-            return Promise.reject(null)
+            return Promise.reject('Client has been inited already')
         }
         this.__run()
         return new Promise((resolve, reject) => {
@@ -64,7 +63,6 @@ module.exports = class ClientApi {
         const update = this.api.receive()
 
         if (!update) {
-            //console.log(`No updates ${update},  sleep for ${sleepInterval}ms`)
             this.__run(sleepInterval)
             return
         }
@@ -72,18 +70,18 @@ module.exports = class ClientApi {
         switch (update['@type']) {
             case 'updateAuthorizationState': {
                 const authObj = await this.Auth.buildQuery(update).catch(console.log)
-                this.api.send(authObj)
-                this.__run()
+                if (this.Auth.__started()) {
+                    this.api.send(authObj)
+                    this.__run()
+                } else { console.log('authorization closed!') }
                 break
             }
             case 'error': {
                 if (update.hasOwnProperty('@extra')) {
                     this.getExtra(update['@extra']).reject(update)
                     this.delExtra(update['@extra'])
-                    err(update)
                 }
-                console.log(`Updates ERROR ${update},  sleep for ${sleepInterval}ms`)
-                this.__run(sleepInterval)
+                await this.__handleUpdateError(update)
                 break
             }
             default:
@@ -98,6 +96,30 @@ module.exports = class ClientApi {
                 this.ClientEvent.play(update)
                 this.__run()
                 break
+        }
+    }
+
+    async __handleUpdateError(update) {
+        switch (update['message']) {
+            case 'PHONE_CODE_EMPTY':
+            case 'PHONE_CODE_INVALID': {
+                const authObj = await this.Auth.buildCodeQuery().catch(console.log)
+                this.api.send(authObj)
+                this.__run()
+                break
+            }
+            case 'PASSWORD_HASH_INVALID': {
+                const authObj = await this.Auth.buildPassQuery().catch(console.log)
+                this.api.send(authObj)
+                this.__run()
+            }
+            case 'ACCESS_TOKEN_INVALID': {
+                console.log('Unknown access token!')
+                this.stop()
+            }
+            default:
+                console.log(`Updates ERROR ${update},  sleep for ${sleepInterval}ms`)
+                this.__run(sleepInterval)
         }
     }
 

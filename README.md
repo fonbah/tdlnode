@@ -27,6 +27,8 @@ const configuration = {
 const up = async () => {
     const client = new Client({ api_id, api_hash, phone_number }, configuration)
 
+    const callback = msg => {console.log('event', msg)}
+
     await client.init()
 
     const chats = await client.fetch({
@@ -84,9 +86,6 @@ const conf = {
 ### Getting started with telegram TDLib
 - api_id and api_hash https://my.telegram.org/
 - documentation https://core.telegram.org/tdlib/getting-started
+- TDLib API updates objects https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_update.html
 - list of all available TDLib API methods https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_function.html
-
-### BUILDING INSTRUCTIONS  :
-build TDLib binary https://tdlib.github.io/td/build.html?language=JavaScript
-
-NOTE: building requires min 6gb RAM
+- building instructions https://tdlib.github.io/td/build.html?language=JavaScript

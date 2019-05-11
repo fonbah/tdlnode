@@ -20,12 +20,12 @@ class Auth {
     }
 
     this.__initResolve = result => {
-      if (inited.hasOwnProperty('resolve')) {
-        return inited.resolve(result)
-      }
-      return Promise.reject(null)
+      return inited.resolve(result)
     }
 
+    this.__initClose = () => {
+      inited = null
+    }
   }
 
   async buildQuery(update) {
@@ -74,16 +74,32 @@ class Auth {
         break
       }
       case 'authorizationStateWaitPassword': {
-        const password = await prompt('password: ')
-        return {
-          '@type': 'checkAuthenticationPassword',
-          password,
-        }
+        const query = await this.buildPassQuery()
+        return query
         break
       }
+      case 'authorizationStateClosed':
+        this.__initClose()
+        break
       case 'authorizationStateReady':
         this.__initResolve(update)
         return true
+    }
+  }
+
+  async buildCodeQuery() {
+    const code = await prompt('code: ')
+    return {
+      '@type': 'checkAuthenticationCode',
+      code,
+    }
+  }
+
+  async buildPassQuery() {
+    const password = await prompt('password: ')
+    return {
+      '@type': 'checkAuthenticationPassword',
+      password,
     }
   }
 }

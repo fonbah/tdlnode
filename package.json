@@ -1,6 +1,6 @@
 {
   "name": "tdlnode",
-  "version": "0.9.3",
+  "version": "0.9.5",
   "description": "Telegram nodejs client",
   "main": "index.js",
   "scripts": {
