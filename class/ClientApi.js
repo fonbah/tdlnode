@@ -118,7 +118,7 @@ module.exports = class ClientApi {
                 this.stop()
             }
             default:
-                console.log(`Updates ERROR ${update},  sleep for ${sleepInterval}ms`)
+                this.ClientEvent.play(update)
                 this.__run(sleepInterval)
         }
     }

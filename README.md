@@ -81,6 +81,16 @@ const conf = {
 }
 ```
 
+### Errors handling
+```js
+client.on('error', update => {
+    console.log('client error', update)
+    if (update.code == 429) {
+        client.stop()
+    }
+})
+```
+
 ### Getting started with telegram TDLib
 - api_id and api_hash https://my.telegram.org/
 - documentation https://core.telegram.org/tdlib/getting-started
