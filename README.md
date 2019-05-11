@@ -27,8 +27,6 @@ const configuration = {
 const up = async () => {
     const client = new Client({ api_id, api_hash, phone_number }, configuration)
 
-    const callback = msg => {console.log('event', msg)}
-
     await client.init()
 
     const chats = await client.fetch({
