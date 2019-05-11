@@ -69,7 +69,7 @@ module.exports = class ClientApi {
 
         switch (update['@type']) {
             case 'updateAuthorizationState': {
-                const authObj = await this.Auth.buildQuery(update).catch(console.log)
+                const authObj = await this.Auth.buildQuery(update)
                 if (this.Auth.__started()) {
                     this.api.send(authObj)
                     this.__run()
@@ -99,13 +99,13 @@ module.exports = class ClientApi {
         switch (update['message']) {
             case 'PHONE_CODE_EMPTY':
             case 'PHONE_CODE_INVALID': {
-                const authObj = await this.Auth.buildCodeQuery().catch(console.log)
+                const authObj = await this.Auth.buildCodeQuery()
                 this.api.send(authObj)
                 this.__run()
                 break
             }
             case 'PASSWORD_HASH_INVALID': {
-                const authObj = await this.Auth.buildPassQuery().catch(console.log)
+                const authObj = await this.Auth.buildPassQuery()
                 this.api.send(authObj)
                 this.__run()
             }
@@ -120,12 +120,8 @@ module.exports = class ClientApi {
     }
 
     stop() {
-        try {
-            this.api.destroy()
-            console.log('Client successfully stopped!')
-        } catch (e) {
-            console.log(e)
-        }
+        this.api.destroy()
+        console.log('Client successfully stopped!')
         process.exit()
     }
 
