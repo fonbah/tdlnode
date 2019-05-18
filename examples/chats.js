@@ -1,5 +1,5 @@
 'use strict'
-const { Client } = require('../index')
+const { Client } = require('tdlnode')
 const configExample = require('./config')
 
 const api_id = 'your api_id'

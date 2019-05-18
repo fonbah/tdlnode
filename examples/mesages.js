@@ -1,5 +1,5 @@
 'use strict'
-const { Client } = require('../index')
+const { Client } = require('tdlnode')
 const configExample = require('./config')
 
 const api_id = 'your api_id'
@@ -19,7 +19,6 @@ const up = async () => {
         'limit': 100,
     })
 
-    //Send message
     const sendMesage = await client.fetch({
         '@type': 'sendMessage',
         'chat_id': '', //your chat_id
@@ -45,6 +44,44 @@ const up = async () => {
         'chat_id': '', //your chat_id
         'message_ids': [''], // array of message_id
         'revoke': true, // for all users
+    })
+
+    const sendPhotoMesage = await client.fetch({
+        '@type': 'sendMessage',
+        'chat_id': '', //your chat_id
+        'input_message_content': {
+            '@type': 'inputMessagePhoto',
+            'photo': {
+                '@type': 'inputFileLocal',
+                'path': '', //Full path to photo
+            },
+            'thumbnail': null,
+            'added_sticker_file_ids': [],
+            'width': null,
+            'height': null,
+            'caption': {
+                 '@type': 'formattedText',
+                 'text': 'New photo!',
+             },
+            'ttl': 0,
+        },
+        'reply_to_message_id': null,
+    }) 
+
+    const sendDocumentMesage = await client.fetch({
+        '@type': 'sendMessage',
+        'chat_id': '', //your chat_id
+        'input_message_content': {
+            '@type': 'inputMessageDocument',
+            'document': {
+                '@type': 'inputFileLocal',
+                'path': '', //Full path to file
+            },
+            'thumbnail': null,
+            'caption': null,
+            'ttl': 0,
+        },
+        'reply_to_message_id': null,
     })
 
     console.log(
