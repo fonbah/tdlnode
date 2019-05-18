@@ -78,8 +78,8 @@ module.exports = class ClientApi {
             }
             case 'error': {
                 if (update.hasOwnProperty('@extra')) {
-                    this.getExtra(update['@extra']).reject(update)
-                    this.delExtra(update['@extra'])
+                    this.__getExtra(update['@extra']).reject(update)
+                    this.__delExtra(update['@extra'])
                 }
                 await this.__handleUpdateError(update)
                 break
