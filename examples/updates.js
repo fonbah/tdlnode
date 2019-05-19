@@ -49,7 +49,7 @@ const up = async () => {
     client.on('updateOption', update => {
         if (update.name === 'my_id') {
             if (state.has(update.name)) {
-                state = new Map
+                state.clear()
             }
             defaultAction(update.name, update.value.value)
         }
