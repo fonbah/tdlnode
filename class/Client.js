@@ -8,7 +8,6 @@ const { clientDefaultOptions, libDefaultOtions, tdlDefaultOptions } = require('.
 
 module.exports = class Client {
     constructor(credentials, options = {}) {
-
         const libOptions = optsMerge(libDefaultOtions, options)
         const tdlOptions = optsMerge(tdlDefaultOptions, options)
         const clientOptions = optsMerge(clientDefaultOptions, options)
@@ -43,5 +42,7 @@ module.exports = class Client {
         this.off = (event, callBack) => {
             __ClientApi.ClientEvent.off(event, callBack)
         }
+
+        this.input = __ClientApi.Auth.clientInput
     }
 }

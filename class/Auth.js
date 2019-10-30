@@ -1,11 +1,15 @@
 'use strict'
-const prompt = require('../tools/prompt')
+const ClientInput = require('./ClientInput')
 
 class Auth {
   constructor(credentials, options) {
     let inited = null
+
     this.credentials = credentials
     this.options = options
+
+    this.__clientInput
+    this.clientInput = new ClientInput(onInput => { this.__clientInput = onInput })
 
     this.__started = () => {
       return null !== inited
@@ -13,7 +17,7 @@ class Auth {
 
     this.__initStart = resolver => {
       if (null !== inited) {
-        console.log('Client has been inited already')
+        console.log('Client inited already')
         return null
       }
       inited = resolver
@@ -67,9 +71,9 @@ class Auth {
         const authObj = { '@type': 'checkAuthenticationCode' }
         if (!update['authorization_state']['is_registered']) {
           console.log(`User ${phone_number} has not yet been registered yet...`)
-          authObj['first_name'] = await prompt('first_name: ')
+          authObj['first_name'] = await this.__clientInput('first_name')
         }
-        authObj['code'] = await prompt('code: ')
+        authObj['code'] = await this.__clientInput('code')
         return authObj
         break
       }
@@ -88,7 +92,7 @@ class Auth {
   }
 
   async buildCodeQuery() {
-    const code = await prompt('code: ')
+    const code = await this.__clientInput('code')
     return {
       '@type': 'checkAuthenticationCode',
       code,
@@ -96,7 +100,7 @@ class Auth {
   }
 
   async buildPassQuery() {
-    const password = await prompt('password: ')
+    const password = await this.__clientInput('password')
     return {
       '@type': 'checkAuthenticationPassword',
       password,

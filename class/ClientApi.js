@@ -39,7 +39,7 @@ module.exports = class ClientApi {
 
     init() {
         if (this.Auth.__started()) {
-            return Promise.reject('Client has been inited already')
+            return Promise.reject('Client inited already')
         }
         this.__run()
         return new Promise((resolve, reject) => {
