@@ -1,10 +1,18 @@
 ### tdlnode
 Telegram nodejs client https://github.com/tdlib/td
 
+- [Getting started](#getting-started)
+- [Handling events](#events)
+- [Options](#options)
+- [Handling input](#client-input)
+- [Handling errors](#client-errors)
+- [TDLib](#tdlib)
+
 ### Requirements
 1. Node.js >= 10 preferred (minimum >= 9.0.0)
 2. TDLib binary https://github.com/tdlib/td
 
+<a name="getting-started"></a>
 ### Getting started
 - Build TDLib binary https://tdlib.github.io/td/build.html?language=JavaScript
 - `npm i tdlnode`
@@ -44,6 +52,7 @@ const up = async () => {
 up()
 ```
 
+<a name="events"></a>
 ### Events
 Subscribe to:
 - updates https://core.telegram.org/tdlib/docs/classtd_1_1td__api_1_1_update.html
@@ -61,6 +70,7 @@ client.off('updateOption', callback)
 ### More examples
 https://github.com/fonbah/tdlnode/tree/master/examples
 
+<a name="options"></a>
 ### Options
 ```js
 const conf = {
@@ -81,6 +91,28 @@ const conf = {
 }
 ```
 
+<a name="client-input"></a>
+### Client input handling
+```js
+const types = client.input.getTypes()
+
+const verificationCodeHandler = resolve => {
+    const code = 'get somehow your code here'
+    resolve(code)
+}
+
+const inputHandler = (type, resolve) => {
+    switch (type) {
+        case 'code':
+            verificationCodeHandler(resolve)
+            break
+    }
+}
+const unsubscribe = client.input.subscribe(inputHandler)
+```
+full example https://github.com/fonbah/tdlnode/blob/master/examples/input.js
+
+<a name="client-errors"></a>
 ### Errors handling
 ```js
 client.on('error', update => {
@@ -91,6 +123,7 @@ client.on('error', update => {
 })
 ```
 
+<a name="tdlib"></a>
 ### Getting started with telegram TDLib
 - api_id and api_hash https://my.telegram.org/
 - documentation https://core.telegram.org/tdlib/getting-started
